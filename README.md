@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/philiprehberger/rb-duration/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/rb-duration/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/philiprehberger-duration.svg)](https://rubygems.org/gems/philiprehberger-duration)
+[![License](https://img.shields.io/github/license/philiprehberger/rb-duration)](LICENSE)
 
 Immutable Duration value object — parse human strings and ISO 8601, perform arithmetic and comparison, and format output.
 

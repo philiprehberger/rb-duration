@@ -8,7 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Philip Rehberger']
   spec.email         = ['me@philiprehberger.com']
 
-  spec.summary       = 'Immutable Duration value object — parse human strings and ISO 8601, perform arithmetic and comparison, and format output'
+  spec.summary       = 'Immutable Duration value object — parse human strings and ISO 8601, ' \
+                       'perform arithmetic and comparison, and format output'
   spec.description   = 'Parse human strings and ISO 8601 durations, perform arithmetic and comparison, ' \
                        'and output to human-readable or ISO 8601 formats.'
   spec.homepage      = 'https://github.com/philiprehberger/rb-duration'

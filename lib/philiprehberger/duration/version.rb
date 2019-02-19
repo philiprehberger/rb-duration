@@ -2,6 +2,6 @@
 
 module Philiprehberger
   class Duration
-    VERSION = "0.1.8"
+    VERSION = '0.1.8'
   end
 end

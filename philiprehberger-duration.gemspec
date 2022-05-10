@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.email = ['me@philiprehberger.com']
 
   spec.summary = 'Immutable Duration value object — parse human strings and ISO 8601, ' \
-                       'perform arithmetic and comparison, and format output'
+                     'perform arithmetic and comparison, and format output'
   spec.description = 'Parse human strings and ISO 8601 durations, perform arithmetic and comparison, ' \
-                       'and output to human-readable or ISO 8601 formats.'
+                     'and output to human-readable or ISO 8601 formats.'
   spec.homepage = 'https://philiprehberger.com/open-source-packages/ruby/philiprehberger-duration'
   spec.license = 'MIT'
 

@@ -279,4 +279,73 @@ RSpec.describe Philiprehberger::Duration do
       expect(d.to_s).to eq('1 hour')
     end
   end
+
+  describe 'component accessors' do
+    let(:duration) { described_class.parse('1 day 2 hours 30 minutes 45 seconds') }
+
+    it 'returns days component' do
+      expect(duration.days).to eq(1)
+    end
+
+    it 'returns hours component' do
+      expect(duration.hours).to eq(2)
+    end
+
+    it 'returns minutes component' do
+      expect(duration.minutes).to eq(30)
+    end
+
+    it 'returns seconds component' do
+      expect(duration.seconds).to eq(45)
+    end
+
+    it 'returns zero for missing components' do
+      d = described_class.parse('2h')
+      expect(d.days).to eq(0)
+      expect(d.minutes).to eq(0)
+      expect(d.seconds).to eq(0)
+    end
+  end
+
+  describe '#to_hash' do
+    it 'returns component hash' do
+      d = described_class.parse('1 day 2 hours 30 minutes 45 seconds')
+      expect(d.to_hash).to eq({ days: 1, hours: 2, minutes: 30, seconds: 45 })
+    end
+
+    it 'returns zeros for zero duration' do
+      expect(described_class.new(0).to_hash).to eq({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+    end
+  end
+
+  describe '#round' do
+    it 'rounds to nearest hour' do
+      d = described_class.parse('1h 45m')
+      expect(d.round(:hour).to_seconds).to eq(7200.0)
+    end
+
+    it 'rounds down to nearest hour' do
+      d = described_class.parse('1h 20m')
+      expect(d.round(:hour).to_seconds).to eq(3600.0)
+    end
+
+    it 'rounds to nearest minute' do
+      d = described_class.parse('1h 30s')
+      expect(d.round(:minute).to_seconds).to eq(3660.0)
+    end
+
+    it 'rounds to nearest day' do
+      d = described_class.parse('1 day 13 hours')
+      expect(d.round(:day).to_seconds).to eq(172_800.0)
+    end
+
+    it 'rounds to nearest second' do
+      d = described_class.new(90.7)
+      expect(d.round(:second).to_seconds).to eq(91.0)
+    end
+
+    it 'raises on unknown unit' do
+      expect { described_class.parse('1h').round(:week) }.to raise_error(described_class::Error)
+    end
+  end
 end

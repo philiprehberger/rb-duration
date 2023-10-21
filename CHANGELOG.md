@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-01
+
+### Added
+- `#days`, `#hours`, `#minutes`, `#seconds` component accessor methods
+- `#to_hash` for structured serialization as `{ days:, hours:, minutes:, seconds: }`
+- `#round(unit)` for rounding to nearest `:day`, `:hour`, `:minute`, or `:second`
+
 ## [0.1.10] - 2026-03-31
 
 ### Added

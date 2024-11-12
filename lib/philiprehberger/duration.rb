@@ -23,6 +23,13 @@ module Philiprehberger
       new(seconds)
     end
 
+    # Return a zero-length duration
+    #
+    # @return [Duration]
+    def self.zero
+      new(0)
+    end
+
     # Calculate the duration between two Time objects
     #
     # @param time_a [Time] start time
@@ -38,6 +45,32 @@ module Philiprehberger
 
       @total_seconds = total_seconds.to_f
       freeze
+    end
+
+    # Whether this duration is zero seconds
+    # @return [Boolean]
+    def zero?
+      @total_seconds.zero?
+    end
+
+    # Format using strftime-style tokens: %D (days), %H (hours, zero-padded),
+    # %M (minutes, zero-padded), %S (seconds, zero-padded), %T (H:M:S),
+    # %s (total seconds as integer), %%
+    #
+    # @param pattern [String]
+    # @return [String]
+    def format(pattern)
+      pattern.gsub(/%[DHMSTs%]/) do |token|
+        case token
+        when '%D' then days.to_s
+        when '%H' then hours.to_s.rjust(2, '0')
+        when '%M' then minutes.to_s.rjust(2, '0')
+        when '%S' then seconds.to_s.rjust(2, '0')
+        when '%T' then "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}"
+        when '%s' then @total_seconds.to_i.to_s
+        when '%%' then '%'
+        end
+      end
     end
 
     def to_seconds = @total_seconds

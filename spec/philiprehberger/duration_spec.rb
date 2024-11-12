@@ -348,4 +348,48 @@ RSpec.describe Philiprehberger::Duration do
       expect { described_class.parse('1h').round(:week) }.to raise_error(described_class::Error)
     end
   end
+
+  describe '.zero' do
+    it 'returns a zero-length duration' do
+      expect(described_class.zero.to_seconds).to eq(0.0)
+    end
+
+    it 'is zero?' do
+      expect(described_class.zero.zero?).to be(true)
+    end
+  end
+
+  describe '#zero?' do
+    it 'returns false for a nonzero duration' do
+      expect(described_class.parse('1s').zero?).to be(false)
+    end
+  end
+
+  describe '#format' do
+    let(:duration) { described_class.parse('1 day 2 hours 3 minutes 4 seconds') }
+
+    it 'substitutes %D with days' do
+      expect(duration.format('%D')).to eq('1')
+    end
+
+    it 'substitutes %H, %M, %S zero-padded' do
+      expect(duration.format('%H:%M:%S')).to eq('02:03:04')
+    end
+
+    it 'substitutes %T with H:M:S' do
+      expect(duration.format('%T')).to eq('02:03:04')
+    end
+
+    it 'substitutes %s with total integer seconds' do
+      expect(described_class.parse('90s').format('%s')).to eq('90')
+    end
+
+    it 'escapes %% as a literal percent' do
+      expect(duration.format('%D%%')).to eq('1%')
+    end
+
+    it 'leaves non-token text intact' do
+      expect(duration.format('%D days %T')).to eq('1 days 02:03:04')
+    end
+  end
 end

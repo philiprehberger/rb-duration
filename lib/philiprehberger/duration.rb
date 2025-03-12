@@ -74,6 +74,9 @@ module Philiprehberger
     end
 
     def to_seconds = @total_seconds
+    def to_minutes = @total_seconds / 60.0
+    def to_hours = @total_seconds / 3600.0
+    def to_days = @total_seconds / 86_400.0
     def to_human = Formatter.to_human(@total_seconds)
     def to_iso8601 = Formatter.to_iso8601(@total_seconds)
 

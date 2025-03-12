@@ -88,6 +88,15 @@ d = Philiprehberger::Duration.parse("1h 45m")
 d.round(:hour).to_human  # => "2 hours"
 ```
 
+### Total Conversion
+
+```ruby
+d = Philiprehberger::Duration.parse("2h 30m")
+d.to_minutes  # => 150.0
+d.to_hours    # => 2.5
+d.to_days     # => 0.104166...
+```
+
 ### Custom Formatting
 
 ```ruby
@@ -107,6 +116,9 @@ Philiprehberger::Duration.zero.zero?  # => true
 | `#zero?` | Whether the duration is zero |
 | `#format(pattern)` | strftime-style formatter (`%D %H %M %S %T %s %%`) |
 | `#to_seconds` | Total seconds as float |
+| `#to_minutes` | Total minutes as float |
+| `#to_hours` | Total hours as float |
+| `#to_days` | Total days as float |
 | `#to_human` | Human-readable string |
 | `#to_iso8601` | ISO 8601 formatted string |
 | `#days` | Extracted day component |

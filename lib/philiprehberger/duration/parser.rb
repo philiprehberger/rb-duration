@@ -5,8 +5,8 @@ module Philiprehberger
     # Parse duration strings into total seconds
     module Parser
       HUMAN_PATTERN =
-        /(\d+(?:\.\d+)?)\s*(ms|milliseconds?|d(?:ays?)?|h(?:ours?)?|m(?:in(?:utes?)?)?|s(?:ec(?:onds?)?)?)/i
-      ISO_PATTERN = /\AP(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?\z/
+        /(\d+(?:\.\d+)?)\s*(ms|milliseconds?|w(?:eeks?)?|d(?:ays?)?|h(?:ours?)?|m(?:in(?:utes?)?)?|s(?:ec(?:onds?)?)?)/i
+      ISO_PATTERN = /\AP(?:(\d+)W)?(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?\z/
 
       # Parse input into total seconds
       #
@@ -44,14 +44,15 @@ module Philiprehberger
       end
 
       def self.iso_to_seconds(match)
-        d, h, m, s = (1..4).map { |i| (match[i] || 0).to_f }
-        (d * 86_400) + (h * 3600) + (m * 60) + s
+        w, d, h, m, s = (1..5).map { |i| (match[i] || 0).to_f }
+        (w * 604_800) + (d * 86_400) + (h * 3600) + (m * 60) + s
       end
       private_class_method :parse_iso
 
       def self.convert_unit(value, unit)
         case unit
         when 'ms', /\Amilliseconds?\z/ then value / 1000.0
+        when /\Aw/ then value * 604_800
         when /\Ad/ then value * 86_400
         when /\Ah/ then value * 3600
         when /\Am/ then value * 60

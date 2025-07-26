@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-10
+
+### Added
+- Week support in parsing (`"2w"`, `"1 week"`, `"P2W"`), formatting, and component access
+- `Duration.from_hash` factory method for constructing durations from named components
+- `#to_weeks` total conversion method
+- `#weeks` component accessor
+- `#to_i` and `#to_f` standard Ruby numeric conversion methods
+- `%W` format token for weeks in `#format`
+- `:week` unit for `#round`
+
+### Changed
+- `#to_hash` now includes `weeks:` key
+- `#days` now returns the day component within the current week (0-6), consistent with how `#hours` returns 0-23
+
 ## [0.4.0] - 2026-04-10
 
 ### Added
@@ -52,7 +67,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Sponsor badge to README
 - Fix License section format
 - Sync gemspec summary with README
-
 
 ## [0.1.7] - 2026-03-24
 

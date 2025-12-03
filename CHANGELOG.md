@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-04-15
+
+### Added
+- `Duration.parse?(input)` non-raising variant that returns `nil` for `nil`, empty, or unparseable input
+
 ## [0.5.0] - 2026-04-10
 
 ### Added

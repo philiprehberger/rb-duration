@@ -47,6 +47,15 @@ Duration.parse("P2W")             # ISO 8601 weeks
 Duration.parse(3600)              # numeric seconds
 ```
 
+Use `Duration.parse?` for a non-raising variant that returns `nil` on invalid input:
+
+```ruby
+Duration.parse?("2h 30m")  # => Duration("2 hours, 30 minutes")
+Duration.parse?("xyz")     # => nil
+Duration.parse?("")        # => nil
+Duration.parse?(nil)       # => nil
+```
+
 ### Arithmetic
 
 ```ruby
@@ -124,6 +133,7 @@ Philiprehberger::Duration.zero.zero?  # => true
 | Method | Description |
 |--------|-------------|
 | `Duration.parse(input)` | Parse human string, ISO 8601, or numeric seconds |
+| `Duration.parse?(input)` | Non-raising variant of `parse` — returns `nil` on `nil`, empty, or invalid input |
 | `Duration.from_hash(**components)` | Construct from named components (weeks, days, hours, minutes, seconds) |
 | `Duration.between(time_a, time_b)` | Duration between two Time objects |
 | `Duration.zero` | Zero-length duration |

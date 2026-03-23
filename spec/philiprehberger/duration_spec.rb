@@ -190,7 +190,8 @@ RSpec.describe Philiprehberger::Duration do
 
     it 'raises on invalid operand type' do
       d = described_class.parse('1h')
-      expect { d + 'bad' }.to raise_error(described_class::Error)
+      bad = 'bad'
+      expect { d + bad }.to raise_error(described_class::Error)
     end
   end
 

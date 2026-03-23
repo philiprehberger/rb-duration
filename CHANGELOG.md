@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-03-22
+
+### Changed
+- Expand test coverage from 25 to 47 examples
+
 ## [0.1.5] - 2026-03-21
 
 ### Fixed

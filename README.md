@@ -86,8 +86,8 @@ Duration.between(start_time, end_time).to_human  # => "3 hours, 15 minutes"
 
 ```bash
 bundle install
-bundle exec rspec      # Run tests
-bundle exec rubocop    # Check code style
+bundle exec rspec
+bundle exec rubocop
 ```
 
 ## License

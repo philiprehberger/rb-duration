@@ -70,6 +70,24 @@ Duration.parse("60m") == Duration.parse("1h")  # => true
 Duration.between(start_time, end_time).to_human  # => "3 hours, 15 minutes"
 ```
 
+### Component Accessors
+
+```ruby
+d = Philiprehberger::Duration.parse("1 day 2 hours 30 minutes 45 seconds")
+d.days     # => 1
+d.hours    # => 2
+d.minutes  # => 30
+d.seconds  # => 45
+d.to_hash  # => { days: 1, hours: 2, minutes: 30, seconds: 45 }
+```
+
+### Rounding
+
+```ruby
+d = Philiprehberger::Duration.parse("1h 45m")
+d.round(:hour).to_human  # => "2 hours"
+```
+
 ## API
 
 | Method | Description |
@@ -79,6 +97,12 @@ Duration.between(start_time, end_time).to_human  # => "3 hours, 15 minutes"
 | `#to_seconds` | Total seconds as float |
 | `#to_human` | Human-readable string |
 | `#to_iso8601` | ISO 8601 formatted string |
+| `#days` | Extracted day component |
+| `#hours` | Extracted hour component (0-23) |
+| `#minutes` | Extracted minute component (0-59) |
+| `#seconds` | Extracted second component (0-59) |
+| `#to_hash` | Components as `{ days:, hours:, minutes:, seconds: }` |
+| `#round(unit)` | Round to nearest `:day`, `:hour`, `:minute`, or `:second` |
 | `#+`, `#-`, `#*`, `#/` | Arithmetic operations |
 | `<`, `>`, `==`, `<=>` | Comparison (via Comparable) |
 

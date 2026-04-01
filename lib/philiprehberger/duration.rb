@@ -44,6 +44,50 @@ module Philiprehberger
     def to_human = Formatter.to_human(@total_seconds)
     def to_iso8601 = Formatter.to_iso8601(@total_seconds)
 
+    # Extracted day component
+    # @return [Integer]
+    def days
+      @total_seconds.to_i / 86_400
+    end
+
+    # Extracted hour component (0-23)
+    # @return [Integer]
+    def hours
+      (@total_seconds.to_i % 86_400) / 3600
+    end
+
+    # Extracted minute component (0-59)
+    # @return [Integer]
+    def minutes
+      (@total_seconds.to_i % 3600) / 60
+    end
+
+    # Extracted second component (0-59)
+    # @return [Integer]
+    def seconds
+      @total_seconds.to_i % 60
+    end
+
+    # Return components as a hash
+    # @return [Hash] { days:, hours:, minutes:, seconds: }
+    def to_hash
+      { days: days, hours: hours, minutes: minutes, seconds: seconds }
+    end
+
+    # Round to the nearest unit
+    # @param unit [Symbol] :day, :hour, :minute, or :second
+    # @return [Duration] new rounded duration
+    def round(unit)
+      rounded = case unit
+                when :day then ((@total_seconds / 86_400.0).round * 86_400)
+                when :hour then ((@total_seconds / 3600.0).round * 3600)
+                when :minute then ((@total_seconds / 60.0).round * 60)
+                when :second then @total_seconds.round
+                else raise Error, "Unknown unit: #{unit}"
+                end
+      self.class.new(rounded)
+    end
+
     def +(other)
       self.class.new(@total_seconds + resolve_seconds(other))
     end

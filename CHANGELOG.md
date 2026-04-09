@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-09
+
+### Added
+- `Duration.zero` class method for constructing a zero-length duration
+- `#zero?` predicate
+- `#format(pattern)` strftime-style formatter supporting `%D`, `%H`, `%M`, `%S`, `%T`, `%s`, and `%%`
+
 ## [0.2.1] - 2026-04-08
 
 ### Changed

@@ -88,12 +88,24 @@ d = Philiprehberger::Duration.parse("1h 45m")
 d.round(:hour).to_human  # => "2 hours"
 ```
 
+### Custom Formatting
+
+```ruby
+d = Philiprehberger::Duration.parse("1 day 2h 3m 4s")
+d.format("%D days %T")  # => "1 days 02:03:04"
+d.format("%H:%M:%S")    # => "02:03:04"
+Philiprehberger::Duration.zero.zero?  # => true
+```
+
 ## API
 
 | Method | Description |
 |--------|-------------|
 | `Duration.parse(input)` | Parse human string, ISO 8601, or numeric seconds |
 | `Duration.between(time_a, time_b)` | Duration between two Time objects |
+| `Duration.zero` | Zero-length duration |
+| `#zero?` | Whether the duration is zero |
+| `#format(pattern)` | strftime-style formatter (`%D %H %M %S %T %s %%`) |
 | `#to_seconds` | Total seconds as float |
 | `#to_human` | Human-readable string |
 | `#to_iso8601` | ISO 8601 formatted string |

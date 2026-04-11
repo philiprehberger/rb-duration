@@ -365,6 +365,36 @@ RSpec.describe Philiprehberger::Duration do
     end
   end
 
+  describe '#to_minutes' do
+    it 'converts to total minutes' do
+      expect(described_class.parse('2h 30m').to_minutes).to eq(150.0)
+    end
+
+    it 'returns fractional minutes' do
+      expect(described_class.parse('90s').to_minutes).to eq(1.5)
+    end
+  end
+
+  describe '#to_hours' do
+    it 'converts to total hours' do
+      expect(described_class.parse('2h 30m').to_hours).to eq(2.5)
+    end
+
+    it 'returns fractional hours' do
+      expect(described_class.parse('45m').to_hours).to eq(0.75)
+    end
+  end
+
+  describe '#to_days' do
+    it 'converts to total days' do
+      expect(described_class.parse('36h').to_days).to eq(1.5)
+    end
+
+    it 'returns fractional days' do
+      expect(described_class.parse('12h').to_days).to eq(0.5)
+    end
+  end
+
   describe '#format' do
     let(:duration) { described_class.parse('1 day 2 hours 3 minutes 4 seconds') }
 

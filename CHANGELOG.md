@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-10
+
+### Added
+- `#to_minutes` total duration in minutes as Float
+- `#to_hours` total duration in hours as Float
+- `#to_days` total duration in days as Float
+
+### Fixed
+- Align issue templates with guide (add gem version field, alternatives field)
+
 ## [0.3.0] - 2026-04-09
 
 ### Added
@@ -58,8 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Expand test coverage from 25 to 47 examples
-
-## [0.1.5] - 2026-03-21
 
 ### Fixed
 - Standardize Installation section in README

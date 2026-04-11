@@ -40,8 +40,10 @@ d.to_iso8601   # => "PT2H30M"
 ```ruby
 Duration = Philiprehberger::Duration
 
+Duration.parse("2 weeks 3 days")  # human string
 Duration.parse("1 day 3 hours")   # human string
 Duration.parse("PT2H30M")         # ISO 8601
+Duration.parse("P2W")             # ISO 8601 weeks
 Duration.parse(3600)              # numeric seconds
 ```
 
@@ -73,12 +75,13 @@ Duration.between(start_time, end_time).to_human  # => "3 hours, 15 minutes"
 ### Component Accessors
 
 ```ruby
-d = Philiprehberger::Duration.parse("1 day 2 hours 30 minutes 45 seconds")
+d = Philiprehberger::Duration.parse("2 weeks 1 day 2 hours 30 minutes 45 seconds")
+d.weeks    # => 2
 d.days     # => 1
 d.hours    # => 2
 d.minutes  # => 30
 d.seconds  # => 45
-d.to_hash  # => { days: 1, hours: 2, minutes: 30, seconds: 45 }
+d.to_hash  # => { weeks: 2, days: 1, hours: 2, minutes: 30, seconds: 45 }
 ```
 
 ### Rounding
@@ -95,6 +98,16 @@ d = Philiprehberger::Duration.parse("2h 30m")
 d.to_minutes  # => 150.0
 d.to_hours    # => 2.5
 d.to_days     # => 0.104166...
+d.to_weeks    # => 0.014880...
+d.to_i        # => 9000
+d.to_f        # => 9000.0
+```
+
+### Constructing from Components
+
+```ruby
+d = Philiprehberger::Duration.from_hash(weeks: 1, days: 2, hours: 3)
+d.to_human  # => "1 week, 2 days, 3 hours"
 ```
 
 ### Custom Formatting
@@ -111,22 +124,27 @@ Philiprehberger::Duration.zero.zero?  # => true
 | Method | Description |
 |--------|-------------|
 | `Duration.parse(input)` | Parse human string, ISO 8601, or numeric seconds |
+| `Duration.from_hash(**components)` | Construct from named components (weeks, days, hours, minutes, seconds) |
 | `Duration.between(time_a, time_b)` | Duration between two Time objects |
 | `Duration.zero` | Zero-length duration |
 | `#zero?` | Whether the duration is zero |
-| `#format(pattern)` | strftime-style formatter (`%D %H %M %S %T %s %%`) |
+| `#format(pattern)` | strftime-style formatter (`%W %D %H %M %S %T %s %%`) |
 | `#to_seconds` | Total seconds as float |
 | `#to_minutes` | Total minutes as float |
 | `#to_hours` | Total hours as float |
 | `#to_days` | Total days as float |
+| `#to_weeks` | Total weeks as float |
+| `#to_i` | Total seconds as integer |
+| `#to_f` | Total seconds as float |
 | `#to_human` | Human-readable string |
 | `#to_iso8601` | ISO 8601 formatted string |
-| `#days` | Extracted day component |
+| `#weeks` | Extracted week component |
+| `#days` | Extracted day component (0-6) |
 | `#hours` | Extracted hour component (0-23) |
 | `#minutes` | Extracted minute component (0-59) |
 | `#seconds` | Extracted second component (0-59) |
-| `#to_hash` | Components as `{ days:, hours:, minutes:, seconds: }` |
-| `#round(unit)` | Round to nearest `:day`, `:hour`, `:minute`, or `:second` |
+| `#to_hash` | Components as `{ weeks:, days:, hours:, minutes:, seconds: }` |
+| `#round(unit)` | Round to nearest `:week`, `:day`, `:hour`, `:minute`, or `:second` |
 | `#+`, `#-`, `#*`, `#/` | Arithmetic operations |
 | `<`, `>`, `==`, `<=>` | Comparison (via Comparable) |
 

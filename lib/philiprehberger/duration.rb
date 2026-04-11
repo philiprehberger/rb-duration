@@ -23,6 +23,19 @@ module Philiprehberger
       new(seconds)
     end
 
+    # Construct a duration from named components
+    #
+    # @param weeks [Numeric] number of weeks
+    # @param days [Numeric] number of days
+    # @param hours [Numeric] number of hours
+    # @param minutes [Numeric] number of minutes
+    # @param seconds [Numeric] number of seconds
+    # @return [Duration]
+    def self.from_hash(weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0)
+      total = (weeks * 604_800) + (days * 86_400) + (hours * 3600) + (minutes * 60) + seconds
+      new(total)
+    end
+
     # Return a zero-length duration
     #
     # @return [Duration]
@@ -53,15 +66,16 @@ module Philiprehberger
       @total_seconds.zero?
     end
 
-    # Format using strftime-style tokens: %D (days), %H (hours, zero-padded),
+    # Format using strftime-style tokens: %W (weeks), %D (days), %H (hours, zero-padded),
     # %M (minutes, zero-padded), %S (seconds, zero-padded), %T (H:M:S),
     # %s (total seconds as integer), %%
     #
     # @param pattern [String]
     # @return [String]
     def format(pattern)
-      pattern.gsub(/%[DHMSTs%]/) do |token|
+      pattern.gsub(/%[WDHMSTs%]/) do |token|
         case token
+        when '%W' then weeks.to_s
         when '%D' then days.to_s
         when '%H' then hours.to_s.rjust(2, '0')
         when '%M' then minutes.to_s.rjust(2, '0')
@@ -77,13 +91,22 @@ module Philiprehberger
     def to_minutes = @total_seconds / 60.0
     def to_hours = @total_seconds / 3600.0
     def to_days = @total_seconds / 86_400.0
+    def to_weeks = @total_seconds / 604_800.0
+    def to_i = @total_seconds.to_i
+    def to_f = @total_seconds
     def to_human = Formatter.to_human(@total_seconds)
     def to_iso8601 = Formatter.to_iso8601(@total_seconds)
 
-    # Extracted day component
+    # Extracted week component
+    # @return [Integer]
+    def weeks
+      @total_seconds.to_i / 604_800
+    end
+
+    # Extracted day component (0-6)
     # @return [Integer]
     def days
-      @total_seconds.to_i / 86_400
+      (@total_seconds.to_i % 604_800) / 86_400
     end
 
     # Extracted hour component (0-23)
@@ -105,16 +128,17 @@ module Philiprehberger
     end
 
     # Return components as a hash
-    # @return [Hash] { days:, hours:, minutes:, seconds: }
+    # @return [Hash] { weeks:, days:, hours:, minutes:, seconds: }
     def to_hash
-      { days: days, hours: hours, minutes: minutes, seconds: seconds }
+      { weeks: weeks, days: days, hours: hours, minutes: minutes, seconds: seconds }
     end
 
     # Round to the nearest unit
-    # @param unit [Symbol] :day, :hour, :minute, or :second
+    # @param unit [Symbol] :week, :day, :hour, :minute, or :second
     # @return [Duration] new rounded duration
     def round(unit)
       rounded = case unit
+                when :week then ((@total_seconds / 604_800.0).round * 604_800)
                 when :day then ((@total_seconds / 86_400.0).round * 86_400)
                 when :hour then ((@total_seconds / 3600.0).round * 3600)
                 when :minute then ((@total_seconds / 60.0).round * 60)

@@ -310,11 +310,16 @@ RSpec.describe Philiprehberger::Duration do
   describe '#to_hash' do
     it 'returns component hash' do
       d = described_class.parse('1 day 2 hours 30 minutes 45 seconds')
-      expect(d.to_hash).to eq({ days: 1, hours: 2, minutes: 30, seconds: 45 })
+      expect(d.to_hash).to eq({ weeks: 0, days: 1, hours: 2, minutes: 30, seconds: 45 })
     end
 
     it 'returns zeros for zero duration' do
-      expect(described_class.new(0).to_hash).to eq({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+      expect(described_class.new(0).to_hash).to eq({ weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0 })
+    end
+
+    it 'includes weeks component' do
+      d = described_class.parse('2 weeks 3 days')
+      expect(d.to_hash).to eq({ weeks: 2, days: 3, hours: 0, minutes: 0, seconds: 0 })
     end
   end
 
@@ -345,7 +350,7 @@ RSpec.describe Philiprehberger::Duration do
     end
 
     it 'raises on unknown unit' do
-      expect { described_class.parse('1h').round(:week) }.to raise_error(described_class::Error)
+      expect { described_class.parse('1h').round(:month) }.to raise_error(described_class::Error)
     end
   end
 
@@ -420,6 +425,119 @@ RSpec.describe Philiprehberger::Duration do
 
     it 'leaves non-token text intact' do
       expect(duration.format('%D days %T')).to eq('1 days 02:03:04')
+    end
+
+    it 'substitutes %W with weeks' do
+      d = described_class.parse('2 weeks 1 day')
+      expect(d.format('%W weeks %D days')).to eq('2 weeks 1 days')
+    end
+  end
+
+  describe 'week support' do
+    it 'parses human string with weeks' do
+      d = described_class.parse('2w')
+      expect(d.to_seconds).to eq(1_209_600.0)
+    end
+
+    it 'parses full word weeks' do
+      d = described_class.parse('1 week 3 days')
+      expect(d.to_seconds).to eq(864_000.0)
+    end
+
+    it 'parses ISO 8601 weeks' do
+      d = described_class.parse('P2W')
+      expect(d.to_seconds).to eq(1_209_600.0)
+    end
+
+    it 'parses ISO 8601 weeks with days' do
+      d = described_class.parse('P1W3D')
+      expect(d.to_seconds).to eq(864_000.0)
+    end
+
+    it 'returns weeks component' do
+      d = described_class.parse('2 weeks 3 days')
+      expect(d.weeks).to eq(2)
+    end
+
+    it 'returns days component within week' do
+      d = described_class.parse('2 weeks 3 days')
+      expect(d.days).to eq(3)
+    end
+
+    it 'formats weeks in to_human' do
+      expect(described_class.parse('2w').to_human).to eq('2 weeks')
+    end
+
+    it 'formats singular week in to_human' do
+      expect(described_class.parse('1w').to_human).to eq('1 week')
+    end
+
+    it 'formats weeks and days in to_human' do
+      expect(described_class.parse('1 week 2 days').to_human).to eq('1 week, 2 days')
+    end
+
+    it 'formats weeks in to_iso8601' do
+      expect(described_class.parse('2w').to_iso8601).to eq('P2W')
+    end
+
+    it 'formats weeks and days in to_iso8601' do
+      expect(described_class.parse('1 week 3 days 2 hours').to_iso8601).to eq('P1W3DT2H')
+    end
+
+    it 'converts to total weeks' do
+      expect(described_class.parse('2w').to_weeks).to eq(2.0)
+    end
+
+    it 'returns fractional weeks' do
+      expect(described_class.parse('10 days').to_weeks).to be_within(0.001).of(1.429)
+    end
+
+    it 'rounds to nearest week' do
+      d = described_class.parse('10 days')
+      expect(d.round(:week).to_seconds).to eq(604_800.0)
+    end
+  end
+
+  describe '.from_hash' do
+    it 'creates duration from component hash' do
+      d = described_class.from_hash(hours: 2, minutes: 30)
+      expect(d.to_seconds).to eq(9000.0)
+    end
+
+    it 'creates duration with all components' do
+      d = described_class.from_hash(weeks: 1, days: 2, hours: 3, minutes: 4, seconds: 5)
+      expect(d.to_seconds).to eq(788_645.0)
+    end
+
+    it 'creates zero duration with no arguments' do
+      d = described_class.from_hash
+      expect(d.to_seconds).to eq(0.0)
+    end
+
+    it 'roundtrips with to_hash' do
+      original = described_class.parse('1 week 2 days 3 hours 4 minutes 5 seconds')
+      rebuilt = described_class.from_hash(**original.to_hash)
+      expect(rebuilt.to_seconds).to eq(original.to_seconds)
+    end
+  end
+
+  describe '#to_i' do
+    it 'returns total seconds as integer' do
+      expect(described_class.parse('1h 30m').to_i).to eq(5400)
+    end
+
+    it 'truncates fractional seconds' do
+      expect(described_class.new(90.7).to_i).to eq(90)
+    end
+  end
+
+  describe '#to_f' do
+    it 'returns total seconds as float' do
+      expect(described_class.parse('1h 30m').to_f).to eq(5400.0)
+    end
+
+    it 'preserves fractional seconds' do
+      expect(described_class.new(90.7).to_f).to eq(90.7)
     end
   end
 end

@@ -23,6 +23,24 @@ module Philiprehberger
       new(seconds)
     end
 
+    # Non-raising variant of `.parse`
+    #
+    # Returns `nil` when input is `nil`, empty, or cannot be parsed.
+    # Returns a `Duration` otherwise.
+    #
+    # @param input [String, Numeric, nil] human string, ISO 8601, or seconds
+    # @return [Duration, nil]
+    # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
+    def self.parse?(input)
+      return nil if input.nil?
+      return nil if input.respond_to?(:empty?) && input.empty?
+
+      parse(input)
+    rescue Error, ArgumentError
+      nil
+    end
+    # rubocop:enable Style/ReturnNilInPredicateMethodDefinition
+
     # Construct a duration from named components
     #
     # @param weeks [Numeric] number of weeks

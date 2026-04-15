@@ -52,6 +52,50 @@ RSpec.describe Philiprehberger::Duration do
     end
   end
 
+  describe '.parse?' do
+    it 'returns a Duration for a valid human string' do
+      d = described_class.parse?('2h 30m')
+      expect(d).to be_a(described_class)
+      expect(d.to_seconds).to eq(9000.0)
+    end
+
+    it 'parses "1h30m" correctly' do
+      d = described_class.parse?('1h30m')
+      expect(d).to be_a(described_class)
+      expect(d.to_seconds).to eq(5400.0)
+    end
+
+    it 'returns a Duration for a valid ISO 8601 string' do
+      d = described_class.parse?('PT2H30M')
+      expect(d).to be_a(described_class)
+      expect(d.to_seconds).to eq(9000.0)
+    end
+
+    it 'returns a Duration for a valid integer input' do
+      d = described_class.parse?(90)
+      expect(d).to be_a(described_class)
+      expect(d.to_seconds).to eq(90.0)
+    end
+
+    it 'returns nil for an empty string' do
+      expect(described_class.parse?('')).to be_nil
+    end
+
+    it 'returns nil for nil input' do
+      expect(described_class.parse?(nil)).to be_nil
+    end
+
+    it 'returns nil for gibberish input' do
+      expect(described_class.parse?('xyz')).to be_nil
+    end
+
+    it 'returns nil for unsupported input types' do
+      expect(described_class.parse?([])).to be_nil
+      expect(described_class.parse?({})).to be_nil
+      expect(described_class.parse?(:symbol)).to be_nil
+    end
+  end
+
   describe '.between' do
     it 'calculates duration between two times' do
       t1 = Time.new(2026, 1, 1, 0, 0, 0)

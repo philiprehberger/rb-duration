@@ -565,6 +565,42 @@ RSpec.describe Philiprehberger::Duration do
     end
   end
 
+  describe '#from_now' do
+    it 'returns a Time in the future' do
+      frozen_time = Time.new(2026, 4, 15, 12, 0, 0)
+      allow(Time).to receive(:now).and_return(frozen_time)
+
+      d = described_class.parse('2h')
+      expect(d.from_now).to eq(Time.new(2026, 4, 15, 14, 0, 0))
+    end
+  end
+
+  describe '#ago' do
+    it 'returns a Time in the past' do
+      frozen_time = Time.new(2026, 4, 15, 12, 0, 0)
+      allow(Time).to receive(:now).and_return(frozen_time)
+
+      d = described_class.parse('30m')
+      expect(d.ago).to eq(Time.new(2026, 4, 15, 11, 30, 0))
+    end
+  end
+
+  describe '#since' do
+    it 'returns a Time offset forward from the given time' do
+      base = Time.new(2026, 1, 1, 0, 0, 0)
+      d = described_class.parse('1h 30m')
+      expect(d.since(base)).to eq(Time.new(2026, 1, 1, 1, 30, 0))
+    end
+  end
+
+  describe '#before' do
+    it 'returns a Time offset backward from the given time' do
+      base = Time.new(2026, 1, 1, 12, 0, 0)
+      d = described_class.parse('3h')
+      expect(d.before(base)).to eq(Time.new(2026, 1, 1, 9, 0, 0))
+    end
+  end
+
   describe '#to_i' do
     it 'returns total seconds as integer' do
       expect(described_class.parse('1h 30m').to_i).to eq(5400)

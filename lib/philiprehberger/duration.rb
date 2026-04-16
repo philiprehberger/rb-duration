@@ -188,6 +188,22 @@ module Philiprehberger
       @total_seconds <=> other.total_seconds
     end
 
+    def from_now
+      Time.now + @total_seconds
+    end
+
+    def ago
+      Time.now - @total_seconds
+    end
+
+    def since(time)
+      time + @total_seconds
+    end
+
+    def before(time)
+      time - @total_seconds
+    end
+
     def to_s = to_human
     def inspect = "#<Duration #{to_human}>"
 

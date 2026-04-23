@@ -81,6 +81,17 @@ Duration.parse("60m") == Duration.parse("1h")  # => true
 Duration.between(start_time, end_time).to_human  # => "3 hours, 15 minutes"
 ```
 
+### Time Arithmetic
+
+```ruby
+d = Duration.parse("2h 30m")
+
+d.from_now          # => Time.now + 9000 seconds
+d.ago               # => Time.now - 9000 seconds
+d.since(start_time) # => start_time + 9000 seconds
+d.before(deadline)  # => deadline - 9000 seconds
+```
+
 ### Component Accessors
 
 ```ruby
@@ -154,6 +165,10 @@ Philiprehberger::Duration.zero.zero?  # => true
 | `#minutes` | Extracted minute component (0-59) |
 | `#seconds` | Extracted second component (0-59) |
 | `#to_hash` | Components as `{ weeks:, days:, hours:, minutes:, seconds: }` |
+| `#from_now` | `Time.now + to_seconds` |
+| `#ago` | `Time.now - to_seconds` |
+| `#since(time)` | `time + to_seconds` |
+| `#before(time)` | `time - to_seconds` |
 | `#round(unit)` | Round to nearest `:week`, `:day`, `:hour`, `:minute`, or `:second` |
 | `#+`, `#-`, `#*`, `#/` | Arithmetic operations |
 | `<`, `>`, `==`, `<=>` | Comparison (via Comparable) |

@@ -620,4 +620,26 @@ RSpec.describe Philiprehberger::Duration do
       expect(described_class.new(90.7).to_f).to eq(90.7)
     end
   end
+
+  describe '#to_short' do
+    it 'returns "0s" for a zero duration' do
+      expect(described_class.zero.to_short).to eq('0s')
+    end
+
+    it 'formats a single-unit duration' do
+      expect(described_class.from_hash(minutes: 5).to_short).to eq('5m')
+    end
+
+    it 'formats a multi-unit duration with single-letter suffixes' do
+      expect(described_class.from_hash(hours: 2, minutes: 30).to_short).to eq('2h 30m')
+    end
+
+    it 'omits zero components' do
+      expect(described_class.from_hash(hours: 1, seconds: 5).to_short).to eq('1h 5s')
+    end
+
+    it 'includes weeks when applicable' do
+      expect(described_class.from_hash(weeks: 1, days: 2).to_short).to eq('1w 2d')
+    end
+  end
 end

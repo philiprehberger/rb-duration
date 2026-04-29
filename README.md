@@ -75,6 +75,14 @@ Duration.parse("2h") > Duration.parse("1h")   # => true
 Duration.parse("60m") == Duration.parse("1h")  # => true
 ```
 
+### Short Format
+
+```ruby
+Duration.parse("2h 30m").to_short      # => "2h 30m"
+Duration.from_hash(weeks: 1).to_short  # => "1w"
+Duration.zero.to_short                  # => "0s"
+```
+
 ### Between Two Times
 
 ```ruby
@@ -170,6 +178,7 @@ Philiprehberger::Duration.zero.zero?  # => true
 | `#since(time)` | `time + to_seconds` |
 | `#before(time)` | `time - to_seconds` |
 | `#round(unit)` | Round to nearest `:week`, `:day`, `:hour`, `:minute`, or `:second` |
+| `#to_short` | Compact format like "2h 30m" or "1w" |
 | `#+`, `#-`, `#*`, `#/` | Arithmetic operations |
 | `<`, `>`, `==`, `<=>` | Comparison (via Comparable) |
 

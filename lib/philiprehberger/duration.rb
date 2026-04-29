@@ -114,6 +114,7 @@ module Philiprehberger
     def to_f = @total_seconds
     def to_human = Formatter.to_human(@total_seconds)
     def to_iso8601 = Formatter.to_iso8601(@total_seconds)
+    def to_short = Formatter.to_short(@total_seconds)
 
     # Extracted week component
     # @return [Integer]

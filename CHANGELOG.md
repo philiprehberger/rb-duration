@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-04-29
+
+### Added
+- `Duration#to_short` and `Formatter.to_short(seconds)` compact formatter producing strings like "2h 30m" or "1w 2d"
+
 ## [0.7.0] - 2026-04-15
 
 ### Added

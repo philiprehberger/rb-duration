@@ -12,6 +12,14 @@ module Philiprehberger
         [1, 'second', 'seconds']
       ].freeze
 
+      SHORT_UNITS = [
+        [604_800, 'w'],
+        [86_400, 'd'],
+        [3600, 'h'],
+        [60, 'm'],
+        [1, 's']
+      ].freeze
+
       # Format seconds as human-readable string
       #
       # @param total_seconds [Numeric] total seconds
@@ -21,6 +29,17 @@ module Philiprehberger
 
         parts = build_parts(total_seconds.to_i)
         parts.empty? ? '0 seconds' : parts.join(', ')
+      end
+
+      # Format seconds as a compact short string
+      #
+      # @param total_seconds [Numeric] total seconds
+      # @return [String] e.g. "2h 30m"
+      def self.to_short(total_seconds)
+        return '0s' if total_seconds.zero?
+
+        parts = build_short_parts(total_seconds.to_i)
+        parts.empty? ? '0s' : parts.join(' ')
       end
 
       # Format seconds as ISO 8601 duration
@@ -45,6 +64,17 @@ module Philiprehberger
         end
       end
       private_class_method :build_parts
+
+      def self.build_short_parts(remaining)
+        SHORT_UNITS.each_with_object([]) do |(divisor, suffix), parts|
+          value, remaining_val = remaining.divmod(divisor)
+          next if value.zero?
+
+          parts << "#{value}#{suffix}"
+          remaining = remaining_val
+        end
+      end
+      private_class_method :build_short_parts
 
       def self.build_iso_string(weeks, days, hours, minutes, seconds)
         result = 'P'
